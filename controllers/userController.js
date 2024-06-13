@@ -1,5 +1,18 @@
 const User = require('../models/user');
 
+// Obtener un usuario
+const getUser = async (req, res) => {   
+    try {
+        const user = await User.findById(req.params.id);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        res.json(user);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+}
+
 // Obtener todos los usuarios
 const getUsers = async (req, res) => {
     try {
@@ -14,6 +27,8 @@ const getUsers = async (req, res) => {
 const createUser = async (req, res) => {
     const user = new User({
         name: req.body.name,
+        dni: req.body.dni,
+        dateOfBirth: req.body.dateOfBirth,
         email: req.body.email,
         password: req.body.password,
     });
@@ -35,6 +50,8 @@ const updateUser = async (req, res) => {
         }
 
         user.name = req.body.name || user.name;
+        user.dni = req.body.dni || user.dni;
+        user.dateOfBirth = req.body.dateOfBirth || user.dateOfBirth;
         user.email = req.body.email || user.email;
         user.password = req.body.password || user.password;
 
@@ -60,6 +77,7 @@ const deleteUser = async (req, res) => {
 };
 
 module.exports = {
+    getUser,
     getUsers,
     createUser,
     updateUser,
